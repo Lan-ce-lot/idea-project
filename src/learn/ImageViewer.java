@@ -49,6 +49,7 @@ class ImageViewerFrame extends JFrame {
         menu.add(openItem);
         openItem.addActionListener(event -> {
             // show file chooser dialog
+            //=========================和书上不同
             int result = chooser.showDialog(new JLabel(), "HCS");
 
             // if file selected, set it as icon of label
