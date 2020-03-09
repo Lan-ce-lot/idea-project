@@ -6,8 +6,9 @@ import javax.swing.*;
 
 /**
  * A program for viewing images.
- * @version 1.00 2020-03-08
+ *
  * @author Lance
+ * @version 1.00 2020-03-08
  */
 public class ImageViewer {
     public static void main(String[] args) {
@@ -41,7 +42,6 @@ class ImageViewerFrame extends JFrame {
         // set up the menu bar
         var menuBar = new JMenuBar();
         setJMenuBar(menuBar);
-
         var menu = new JMenu("File");
         menuBar.add(menu);
 
