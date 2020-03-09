@@ -47,7 +47,7 @@ public class GuessBirthday {
                 System.out.print(set3);
             } else if (i == 3) {
                 System.out.print(set4);
-            } else if (i == 4) {
+            } else {
                 System.out.print(set5);
             }
             System.out.println("\n是请输入1，否请输入0：");
