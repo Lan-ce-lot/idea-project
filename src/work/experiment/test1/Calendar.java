@@ -1,5 +1,7 @@
 package work.experiment.test1;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.Scanner;
 
 /**
@@ -11,6 +13,23 @@ import java.util.Scanner;
 public class Calendar {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
+        JFrame frame = new JFrame();
+        frame.setSize(1000,1000);
+        String text = "<html> 第一行<br/> 第二行<br/></html>";
+        JLabel label = new JLabel(text);
+        label.setForeground(Color.red);
+        frame.add(label);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        label.setFont(new Font("宋体", Font.BOLD, 20));
+        JLabel jl = new JLabel(text);
+
+//        Font f = new Font("宋体",Font.PLAIN,16);
+//
+//        jl.setFont(f);
+//        jl.setForeground(Color.red);
+
+
         System.out.println("请输入年份:");
         int[] monthSet = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
         int[][] date = new int[120][46];
