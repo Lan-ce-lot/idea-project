@@ -15,7 +15,7 @@ public class Calendar1 {
             monthSet[1] = 29;
         }
         date = getDate(firstDayWeek, monthSet);
-        System.out.printf("%75d年\n\n", year);
+        System.out.printf("%73d年\n\n", year);
         printCalendar(date);
     }
 
@@ -66,17 +66,17 @@ public class Calendar1 {
         if (flag == 0) {
             System.out.print("                              1月    ");
             System.out.print("                              2月    ");
-            System.out.print("                              3月     ");
+            System.out.print("                              3月    ");
             System.out.print("                              4月   \n");
         } else if (flag == 1) {
             System.out.print("                              5月    ");
             System.out.print("                              6月    ");
-            System.out.print("                              7月     ");
+            System.out.print("                              7月    ");
             System.out.print("                              8月   \n");
         } else {
             System.out.print("                              9月    ");
             System.out.print("                             10月    ");
-            System.out.print("                             11月     ");
+            System.out.print("                             11月    ");
             System.out.print("                             12月   \n");
         }
     }
@@ -84,7 +84,9 @@ public class Calendar1 {
     // 打印星期
     public static void printWeek() {
         for (int i = 0; i < 4; i++) {
-            System.out.print(" 日   一   二   三   四   五   六     ");
+            System.out.print(" 日   一   二   三   四   五   六    ");
+            if (i == 2||i == 0)
+                System.out.print(" ");
         }
         System.out.println();
     }
@@ -100,8 +102,8 @@ public class Calendar1 {
                 }
             }
 
-            if (i - flag * 4 == 0) System.out.print("   ");
-            else System.out.print("  ");
+//            if (i - flag * 4 == 0) System.out.print("   ");
+            System.out.print("  ");
         }
         System.out.println("");
     }
