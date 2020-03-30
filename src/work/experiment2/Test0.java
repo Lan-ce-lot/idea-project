@@ -1,48 +1,44 @@
 package work.experiment2;
 
 import java.util.LinkedHashMap;
-import java.util.Queue;
-import java.util.Random;
 import java.util.Scanner;
-import java.util.concurrent.CountDownLatch;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-
-/**
- * A program for viewing images.
- *
- * @author Lance
- * @version 1.00 2020-03-08
- */
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-
 import javax.swing.JFrame;
-
-
 
 public class Test0 {
     public static void main(String[] args) {
-//        Customer customer = new Customer();
-//        System.out.println(customer.getRandomNumber());
+        Scanner in = new Scanner(System.in);
         Meals.init();
-
         while (true) {
-            Meals.printMenu();
-            Order order = new Order();
+            System.out.println("1.用户系统入口/2.管理系统入口(输入1,2, 其他任意键退出程序)");
+            String str = in.next();
+            if (str.equals("1")) {
+                System.out.println("1.点餐/2.接收可视化报告");
+                if (in.next().equals("1")) {
+                    Meals.printMenu();
+                    Order order = new Order();
+                    order.selectPackage();
+                } else {
+                    System.out.println("请输入您的邮箱");
+                    SendFileEmail.send(in.next());
+                }
+            } else if (str.equals("2")){
+                Meals.printMenu();
+                System.out.println("1.修改菜单2.一周可视化报告(输入1或2, 其他任意键退出)");
+                str = in.next();
+                if (str.equals("1")) {
+                    Meals.changeMenu();
+                } else if (str.equals("2")) {
+                    Demo demo = new Demo();
+                    demo.setVisible(true);
+                } else continue;
 
-            order.selectPackage();
-            for (var i : Meals.kfcPackageChoose.keySet()) {
-                System.out.println(i + ' ' + Meals.kfcPackageChoose.get(i));
             }
-            for (var i : Meals.additionalMealChoose.keySet()) {
-                System.out.println(i + ' ' + Meals.additionalMealChoose.get(i));
-            }
-            Demo demo = new Demo();
-            demo.setVisible(true);
+            else return;
         }
     }
 }
@@ -52,46 +48,13 @@ class Customer {
     private String eMail;
     private String phoneNumbers;
     private String memberNumber;
-    private int loyaltyPoints;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String geteMail() {
         return eMail;
     }
 
-    public void seteMail(String eMail) {
-        this.eMail = eMail;
-    }
-
     public String getPhoneNumbers() {
         return phoneNumbers;
-    }
-
-    public void setPhoneNumbers(String phoneNumbers) {
-        this.phoneNumbers = phoneNumbers;
-    }
-
-    public String getMemberNumber() {
-        return memberNumber;
-    }
-
-    public int getLoyaltyPoints() {
-        return loyaltyPoints;
-    }
-
-    public void setMemberNumber(String memberNumber) {
-        this.memberNumber = memberNumber;
-    }
-
-    public void setLoyaltyPoints(int loyaltyPoints) {
-        this.loyaltyPoints = loyaltyPoints;
     }
 
     public void Membership() {
@@ -122,9 +85,11 @@ class Customer {
             }
         }
         if (phoneNumbers != " ") {
-            System.out.println("用户" + phoneNumbers + "您的会员办理成功, 会员号是:" + getRandomNumber());
+            memberNumber = getRandomNumber();
+            System.out.println("用户" + phoneNumbers + "您的会员办理成功, 会员号是:" + memberNumber);
         } else {
-            System.out.println("用户" + eMail + "您的会员办理成功, 会员号是:" + getRandomNumber());
+            memberNumber = getRandomNumber();
+            System.out.println("用户" + eMail + "您的会员办理成功, 会员号是:" + memberNumber);
         }
     }
 
@@ -134,8 +99,6 @@ class Customer {
 }
 
 class Order {
-    Queue<String> kfcPackage;
-    Queue<String> additionalMeals;
     private double prise;
     Scanner in = new Scanner(System.in);
 
@@ -158,9 +121,8 @@ class Order {
                         break;
                     } else {
                         System.out.println("您已选择附加餐点" + select + ", Q结束选择");
-                        prise += Meals.additionalMealPrice.get(select);
-                        Meals.additionalMealChoose.put(select, Meals.additionalMealChoose.get(select) + 1);
-//                    additionalMeals.offer(select);
+                        prise += Meals.additionalMeal.get(select).prise;
+                        Meals.additionalMeal.get(select).choose++;
                     }
                 }
                 break;
@@ -168,8 +130,8 @@ class Order {
 
             if (m.matches()) {
                 System.out.println("您已选择套餐" + select + ", Q结束选择");
-                prise += Meals.kfcPackagePrice.get(select);
-                Meals.kfcPackageChoose.put(select, Meals.kfcPackageChoose.get(select) + 1);
+                prise += Meals.kfcPackage.get(select).prise;
+                Meals.kfcPackage.get(select).choose++;
             } else {
                 System.out.println("输入错误哦...请重试");
             }
@@ -210,68 +172,85 @@ class Order {
 }
 
 class Meals {
-    static LinkedHashMap<String, Double> kfcPackagePrice = new LinkedHashMap<String, Double>();
-    static LinkedHashMap<String, Double> additionalMealPrice = new LinkedHashMap<String, Double>();
-    static LinkedHashMap<String, Long> kfcPackageChoose = new LinkedHashMap<String, Long>();
-    static LinkedHashMap<String, Long> additionalMealChoose = new LinkedHashMap<String, Long>();
-
+    static LinkedHashMap<String, Meal> kfcPackage = new LinkedHashMap<String, Meal>();
+    static LinkedHashMap<String, Meal> additionalMeal = new LinkedHashMap<String, Meal>();
     public static void init() {
-
-        kfcPackagePrice.put("1", 74.5D);
-        kfcPackagePrice.put("2", 43.5D);
-        kfcPackagePrice.put("3", 39.5D);
-        additionalMealPrice.put("1", 12D);
-        additionalMealPrice.put("2", 10D);
-        additionalMealPrice.put("3", 8D);
-        kfcPackageChoose.put("1", 0L);
-        kfcPackageChoose.put("2", 0L);
-        kfcPackageChoose.put("3", 0L);
-        additionalMealChoose.put("1", 0L);
-        additionalMealChoose.put("2", 0L);
-        additionalMealChoose.put("3", 0L);
-    }
-
-    public static void setKfcPackage(LinkedHashMap<String, Double> kfcPackage) {
-        kfcPackagePrice = kfcPackage;
-    }
-
-    public static void setAdditionalMeals(LinkedHashMap<String, Double> additionalMeals) {
-        additionalMealPrice = additionalMeals;
-    }
-
-    public static void setKfcPackagePrice(LinkedHashMap<String, Double> kfcPackagePrice) {
-        Meals.kfcPackagePrice = kfcPackagePrice;
-    }
-
-    public static void setAdditionalMealPrice(LinkedHashMap<String, Double> additionalMealPrice) {
-        Meals.additionalMealPrice = additionalMealPrice;
+        kfcPackage.put("1", new Meal(".套餐餐点1", 74.5D, 0, "中辣"));
+        kfcPackage.put("2", new Meal(".套餐餐点2", 43.5D, 0, "微辣"));
+        kfcPackage.put("3", new Meal(".套餐餐点3", 39.5D, 0, "不辣"));
+        additionalMeal.put("1", new Meal(".附件餐点1", 12D, 0, "不辣"));
+        additionalMeal.put("2", new Meal(".附加餐点2", 10D, 0, "不辣"));
+        additionalMeal.put("3", new Meal(".附加餐点3", 8D, 0, "微辣"));
     }
 
     public static void printMenu() {
-        System.out.printf("%15s\n", "菜单");
+        System.out.printf("%18s\n", "菜单");
         int con = 1;
-        for (var i : kfcPackagePrice.entrySet()) {
-            System.out.printf("%5s:%15s\n", i.getKey() + ".套餐餐点" + String.valueOf(con++), i.getValue());
+        for (var i : kfcPackage.entrySet()) {
+            System.out.printf("%10s:%15s%10s\n", i.getKey() + i.getValue().name, i.getValue().prise + "￥", i.getValue().pungency);
         }
-        System.out.println("----------------------------");
+        System.out.println("----------------------------------------");
         con = 1;
-        for (var i : additionalMealPrice.keySet()) {
-            System.out.printf("%5s:%15s\n", i + ".附件餐点" + String.valueOf(con++), additionalMealPrice.get(i));
+        for (var i : additionalMeal.keySet()) {
+            System.out.printf("%10s:%15s%10s\n", i + additionalMeal.get(i).name, additionalMeal.get(i).prise + "￥", additionalMeal.get(i).pungency);
         }
-        System.out.println("----------------------------");
+        System.out.println("----------------------------------------");
     }
 
-    public void changeMenu() {
+    public static void changeMenu() {
+        Scanner in = new Scanner(System.in);
+        String temp;
+        System.out.println("请选择要修改的餐点类型, 1.套餐/2.附加(输入1或2)");
+        if (in.next().equals("1")) {
+            System.out.println("请选择套餐(输入1,2,3)");
+            temp = in.next();
+//            kfcPackage.get(temp);
+            System.out.println("请选择修改类型\n1.修改菜名 2.修改价格, 其他键结束修改");
+            String temp1 = in.next();
+            if (temp1.equals("1")) {
+                System.out.println("请输入修改后菜名");
+                kfcPackage.get(temp).name = in.next();
+            } else if (temp1.equals("2")) {
+                System.out.println("请输入修改后价格");
+                kfcPackage.get(temp).prise = Double.valueOf(in.next());
+            } else return;
+        } else {
+            System.out.println("请选择附加餐点(输入1,2,3)");
+            temp = in.next();
+//            additionalMeal.get(temp);
+            System.out.println("请选择修改类型\n1.修改菜名 2.修改价格, 其他键结束修改");
+            String temp1 = in.next();
+            if (temp1.equals("1")) {
+                System.out.println("请输入修改后菜名");
+                kfcPackage.get(temp).name = in.next();
+            } else if (temp1.equals("2")) {
+                System.out.println("请输入修改后价格");
+//                kfcPackage.get(temp).prise = Integer.valueOf(in.next()).intValue();
+                kfcPackage.get(temp).prise = Integer.parseInt(in.next());
+            } else return;
+        }
+        printMenu();
+    }
+}
 
+class Meal {
+    String name;
+    double prise;
+    int choose;
+    String pungency;
+
+    public Meal(String name, double prise, int choose, String pungency) {
+        this.name = name;
+        this.prise = prise;
+        this.choose = choose;
+        this.pungency = pungency;
     }
 }
 
 class Demo extends JFrame {
-
-
     public Demo() {
         super();
-        setTitle("可视化报告");
+        setTitle("一周单品销售次数可视化报告");
         setBounds(100, 100, 600, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
@@ -293,20 +272,20 @@ class Demo extends JFrame {
         }
         g2.setColor(Color.orange);
         int i = 0;
-        for (var it : Meals.kfcPackageChoose.keySet()) {
-            int value = Meals.kfcPackageChoose.get(it).intValue() * 12 + 15;
+        for (var it : Meals.kfcPackage.keySet()) {
+            int value = Meals.kfcPackage.get(it).choose * 12 + 11;
             int step = (i + 1) * 40;//设置每隔柱形图的水平间隔为40
             //绘制矩形
-            g2.fillRoundRect(leftMargin + step * 2, Height - value, 40, value, 40, 10);
+            g2.fillRoundRect(leftMargin + step * 2, Height - value, 40, value, 0, 0);
             //列出产品的编号
             g2.drawString("套餐" + (i + 1), leftMargin + step * 2, Height - value - 5);
             i++;
         }
-        for (var it : Meals.additionalMealChoose.keySet()) {
-            int value = Meals.additionalMealChoose.get(it).intValue() * 12 + 15;
+        for (var it : Meals.additionalMeal.keySet()) {
+            int value = Meals.additionalMeal.get(it).choose * 12 + 11;
             int step = (i + 1) * 40;//设置每隔柱形图的水平间隔为40
             //绘制矩形
-            g2.fillRoundRect(leftMargin + step * 2, Height - value, 40, value, 40, 10);
+            g2.fillRoundRect(leftMargin + step * 2, Height - value, 40, value, 0, 0);
             //列出产品的编号
             g2.drawString("附加餐点" + (i + 1), leftMargin + step * 2, Height - value - 5);
             i++;

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="java1">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$" />
+      <root url="jar://$PROJECT_DIR$/../../java/activation.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../java/javax.mail.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/src" />
+    </SOURCES>
+  </library>
+</component>
