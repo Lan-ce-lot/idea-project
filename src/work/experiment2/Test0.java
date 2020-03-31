@@ -26,7 +26,7 @@ public class Test0 {
                     System.out.println("请输入您的邮箱");
                     SendFileEmail.send(in.next());
                 }
-            } else if (str.equals("2")){
+            } else if (str.equals("2")) {
                 Meals.printMenu();
                 System.out.println("1.修改菜单2.一周可视化报告(输入1或2, 其他任意键退出)");
                 str = in.next();
@@ -37,8 +37,7 @@ public class Test0 {
                     demo.setVisible(true);
                 } else continue;
 
-            }
-            else return;
+            } else return;
         }
     }
 }
@@ -86,6 +85,7 @@ class Customer {
         }
         if (phoneNumbers != " ") {
             memberNumber = getRandomNumber();
+//            Sms.Send(memberNumber);
             System.out.println("用户" + phoneNumbers + "您的会员办理成功, 会员号是:" + memberNumber);
         } else {
             memberNumber = getRandomNumber();
@@ -174,6 +174,7 @@ class Order {
 class Meals {
     static LinkedHashMap<String, Meal> kfcPackage = new LinkedHashMap<String, Meal>();
     static LinkedHashMap<String, Meal> additionalMeal = new LinkedHashMap<String, Meal>();
+
     public static void init() {
         kfcPackage.put("1", new Meal(".套餐餐点1", 74.5D, 0, "中辣"));
         kfcPackage.put("2", new Meal(".套餐餐点2", 43.5D, 0, "微辣"));
@@ -189,12 +190,12 @@ class Meals {
         for (var i : kfcPackage.entrySet()) {
             System.out.printf("%10s:%15s%10s\n", i.getKey() + i.getValue().name, i.getValue().prise + "￥", i.getValue().pungency);
         }
-        System.out.println("----------------------------------------");
+        System.out.println("-------------------------------------------");
         con = 1;
         for (var i : additionalMeal.keySet()) {
             System.out.printf("%10s:%15s%10s\n", i + additionalMeal.get(i).name, additionalMeal.get(i).prise + "￥", additionalMeal.get(i).pungency);
         }
-        System.out.println("----------------------------------------");
+        System.out.println("-------------------------------------------");
     }
 
     public static void changeMenu() {
@@ -251,7 +252,7 @@ class Demo extends JFrame {
     public Demo() {
         super();
         setTitle("一周单品销售次数可视化报告");
-        setBounds(100, 100, 600, 300);
+        setBounds(100, 100, 900, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
@@ -272,22 +273,42 @@ class Demo extends JFrame {
         }
         g2.setColor(Color.orange);
         int i = 0;
+        LinkedHashMap<String, Integer> p = new LinkedHashMap<String, Integer>();
+        p.put("不辣", 0);
+        p.put("微辣", 0);
+        p.put("中辣", 0);
         for (var it : Meals.kfcPackage.keySet()) {
+            System.out.println(Meals.kfcPackage.get(it).name + " " + Meals.kfcPackage.get(it).choose);
             int value = Meals.kfcPackage.get(it).choose * 12 + 11;
             int step = (i + 1) * 40;//设置每隔柱形图的水平间隔为40
             //绘制矩形
             g2.fillRoundRect(leftMargin + step * 2, Height - value, 40, value, 0, 0);
             //列出产品的编号
             g2.drawString("套餐" + (i + 1), leftMargin + step * 2, Height - value - 5);
+            p.put(Meals.kfcPackage.get(it).pungency, p.get(Meals.kfcPackage.get(it).pungency) + Meals.kfcPackage.get(it).choose);
             i++;
         }
+        g2.setColor(Color.green);
         for (var it : Meals.additionalMeal.keySet()) {
+            System.out.println(Meals.additionalMeal.get(it).name + " " + Meals.additionalMeal.get(it).choose);
             int value = Meals.additionalMeal.get(it).choose * 12 + 11;
             int step = (i + 1) * 40;//设置每隔柱形图的水平间隔为40
             //绘制矩形
             g2.fillRoundRect(leftMargin + step * 2, Height - value, 40, value, 0, 0);
             //列出产品的编号
-            g2.drawString("附加餐点" + (i + 1), leftMargin + step * 2, Height - value - 5);
+            g2.drawString("附加餐点" + (i + 1 - 3), leftMargin + step * 2, Height - value - 5);
+            p.put(Meals.additionalMeal.get(it).pungency, p.get(Meals.additionalMeal.get(it).pungency) + Meals.additionalMeal.get(it).choose);
+            i++;
+        }
+        g2.setColor(Color.red);
+        for (var it : p.keySet()) {
+            int value = p.get(it) * 12 + 11;
+            System.out.println(it + " " + p.get(it));
+            int step = (i + 1) * 40;//设置每隔柱形图的水平间隔为40
+            //绘制矩形
+            g2.fillRoundRect(leftMargin + step * 2, Height - value, 40, value, 0, 0);
+            //列出产品的编号
+            g2.drawString(it, leftMargin + step * 2, Height - value - 5);
             i++;
         }
     }
