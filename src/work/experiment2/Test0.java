@@ -24,7 +24,8 @@ public class Test0 {
                     order.selectPackage();
                 } else {
                     System.out.println("请输入您的邮箱");
-                    SendFileEmail.send(in.next());
+                    String s = in.next();
+                    SendFileEmail.send(s);
                 }
             } else if (str.equals("2")) {
                 Meals.printMenu();
@@ -85,7 +86,11 @@ class Customer {
         }
         if (phoneNumbers != " ") {
             memberNumber = getRandomNumber();
-//            Sms.Send(memberNumber);
+            try {
+                Sms.send(memberNumber);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             System.out.println("用户" + phoneNumbers + "您的会员办理成功, 会员号是:" + memberNumber);
         } else {
             memberNumber = getRandomNumber();

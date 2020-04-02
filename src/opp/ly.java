@@ -7,98 +7,93 @@ package opp;
  * @version 1.00 2020-03-08
  */
 
+import com.sun.mail.util.MailSSLSocketFactory;
+
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import java.security.GeneralSecurityException;
+import java.util.Properties;
 import java.util.Scanner;
+public class ly{
+public static void main(String [] args) throws GeneralSecurityException {
 
-public class ly {
+// 收件人电子邮箱
+        String to = "1617025845@qq.com";
 
-    //求该年份1月1号的星期
+                // 发件人电子邮箱
+                String from = "1771071860@qq.com";
 
-    public static int weekday(int year) {
+                // 指定发送邮件的主机为 smtp.qq.com
+                String host = "smtp.qq.com";  //QQ 邮件服务器
 
-        int yearTotalDay = 0;
-        int week;
-        for (int n = 1900; n < year; n++) {
+                // 获取系统属性
+                Properties properties = System.getProperties();
 
-            if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) {
-                yearTotalDay += 366;
-            } else {
-                yearTotalDay += 365;
+                // 设置邮件服务器
+                properties.setProperty("mail.smtp.host", host);
+
+                properties.put("mail.smtp.auth", "true");
+                MailSSLSocketFactory sf = new MailSSLSocketFactory();
+                sf.setTrustAllHosts(true);
+                properties.put("mail.smtp.ssl.enable", "true");
+                properties.put("mail.smtp.ssl.socketFactory", sf);
+                // 获取默认session对象
+                Session session = Session.getDefaultInstance(properties,new Authenticator(){
+public PasswordAuthentication getPasswordAuthentication()
+        {
+        return new PasswordAuthentication("1771071860@qq.com", "zlitczrqwfexdfbb"); //发件人邮件用户名、密码
+        }
+        });
+
+        try{
+        // 创建默认的 MimeMessage 对象
+        MimeMessage message = new MimeMessage(session);
+
+        // Set From: 头部头字段
+            try {
+                message.setFrom(new InternetAddress(from));
+            } catch (MessagingException e) {
+                e.printStackTrace();
             }
+
+            // Set To: 头部头字段
+        message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+        // Set Subject: 头部头字段
+        message.setSubject("This is the Subject Line!");
+
+        // 创建消息部分
+        BodyPart messageBodyPart = new MimeBodyPart();
+
+        // 消息
+        messageBodyPart.setText("This is message body");
+
+        // 创建多重消息
+        Multipart multipart = new MimeMultipart();
+
+        // 设置文本消息部分
+        multipart.addBodyPart(messageBodyPart);
+
+        // 附件部分
+        messageBodyPart = new MimeBodyPart();
+        String filename = "mysql命令.txt";
+        FileDataSource source = new FileDataSource(filename);
+        messageBodyPart.setDataHandler(new DataHandler(source));
+        messageBodyPart.setFileName(filename);
+        multipart.addBodyPart(messageBodyPart);
+
+        // 发送完整消息
+        message.setContent(multipart );
+
+        //发送消息
+        Transport.send(message);
+        System.out.println("Sent message successfully....from laiyan");
+        }catch (MessagingException mex) {
+        mex.printStackTrace();
         }
-        yearTotalDay = yearTotalDay + 1;
-        week = yearTotalDay % 7;
-        return week;
-    }
-
-    //设置一个三维数组calendar[3][4][5][7]存放日期， 第一维是分三块输出，第二维是每块的月数，第三,四维则是具体的时间
-
-    public static int[][][][] calendar(int year, int week) {
-
-        int[][][][] temp = new int[3][4][6][7];
-        int[] monthSet = new int[]{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-        int monthNimble = 0;
-        int cw = week;
-        if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) {
-            monthSet[1] = 29;
-        }
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 4; j++) {
-                for (int k = 0, l = 1; k < 6; k++) {
-                    for (int o = cw; o < 7; o++) {
-                        temp[i][j][k][o] = l;
-                        l++;
-                        if (l > monthSet[monthNimble]) {
-                            l = 1;
-                            break;
-                        }
-                    }
-
-                    cw = 0;
-                }
-                week = (week + monthSet[monthNimble]) % 7;
-                monthNimble++;
-                cw = week;
-            }
-        }
-        return temp;
-    }
-
-    //暴力输出月号以及星期列表
-
-    public static void printMW(int i) {
-        System.out.println("            " + ((i + 1) * (i + 1)) + "月" + "             " + ((i + 1) * (i + 1) + 1) + "月" + "             " + ((i + 1) * (i + 1) + 2) + "月" + "            " + ((i + 1) * (i + 1) + 3) + "月");
-        System.out.println("日一二 三 四 五 六  " + "日一二 三 四 五 六  " + "日一二 三 四 五 六  " + "日一二 三 四 五 六  ");
-    }
-
-    //打印日历表
-
-    public static void printCalendar(int[][][][] temp) {
-        int[][][][] te = new int[3][4][6][7];
-        te = temp;
-        for (int a = 0; a < 3; a++) {
-            printMW(a);
-            for (int b = 0; b < 6; b++) {
-                for (int c = 0; c < 4; c++) {
-                    for (int d = 0; d < 7; d++) {
-                        if (te[a][c][b][d] != 0)
-                            System.out.printf("%02d ", te[a][c][b][d]);
-                        else System.out.print("   ");
-                    }
-                    System.out.print("  ");
-                }
-                System.out.println("");
-            }
-            //System.out.println("");
-        }
-    }
-
-    public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
-        System.out.println("请输入年份：");
-        int year = input.nextInt();
-        int week = weekday(year);
-        int[][][][] tem = new int[3][4][6][7];
-        tem = calendar(year, week);
-        printCalendar(tem);
-    }
-}
+        }}

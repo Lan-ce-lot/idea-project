@@ -53,7 +53,9 @@ public class SendFileEmail
             multipart.addBodyPart(messageBodyPart);
             // 附件部分
             messageBodyPart = new MimeBodyPart();
-            String filename = "F:\\work\\idea\\java1\\src\\learn\\可视化报告.png";
+//            String filename = "F:\\work\\idea\\java1\\src\\learn\\可视化报告.png";
+            String filename = "F:\\work\\idea\\java1\\src\\learn\\CJ{L_(DD]YG8E5BNFGJBH)U.png";
+
             DataSource source = new FileDataSource(filename);
             messageBodyPart.setDataHandler(new DataHandler(source));
             messageBodyPart.setFileName(filename);

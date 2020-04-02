@@ -4,6 +4,9 @@
       <root url="file://$PROJECT_DIR$" />
       <root url="jar://$PROJECT_DIR$/../../java/activation.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../java/javax.mail.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../java/新建文件夹/commons-codec-1.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../java/新建文件夹/commons-httpclient-3.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../java/新建文件夹/commons-logging-1.1.1.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

@@ -8,10 +8,10 @@ public class Test1 {
         c.addStudent("王五");
         c.dropStudent("王五");
         String students[] = c.getStudents();
+        System.out.println(c.getCourseName() + "的学生:");
         for (int i = 0; i < c.getNumberOfStudents(); i++) {
             System.out.println(students[i]);
         }
-
     }
 }
 
@@ -20,12 +20,11 @@ class Course {
     private String[] students = new String[100];
     private int numberOfStudents;
 
-
     public Course(String courseName) {
         this.courseName = courseName;
     }
 
-    // 利用倍增思想
+    // 利用倍增思想, 实现自动增长
     public void addStudent(String student) {
         if (numberOfStudents >= students.length) {
             String[] temp = new String[students.length * 2];
@@ -50,7 +49,7 @@ class Course {
     public void dropStudent(String student) {
         for (int i = 0; i < numberOfStudents; i++) {
             if (student == students[i]) {
-                // 利用arraycopy函数将[i + 1, numberOfStudents]先前移动，把students[i]覆盖
+                // 利用arraycopy函数将students[i]之后的元素向前移动一格, 把students[i]覆盖
                 System.arraycopy(students, i + 1, students, i, numberOfStudents - i - 1);
                 numberOfStudents--;
                 break;
