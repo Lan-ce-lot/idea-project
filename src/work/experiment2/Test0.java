@@ -37,7 +37,6 @@ public class Test0 {
                     Demo demo = new Demo();
                     demo.setVisible(true);
                 } else continue;
-
             } else return;
         }
     }
@@ -46,6 +45,7 @@ public class Test0 {
 class Customer {
     private String name;
     private String eMail;
+    private  String firstname;
     private String phoneNumbers;
     private String memberNumber;
 
@@ -57,45 +57,153 @@ class Customer {
         return phoneNumbers;
     }
 
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        while (true) {
+            var n = new Customer();
+            n.Membership();
+        }
+    }
     public void Membership() {
         Scanner in = new Scanner(System.in);
         // 匹配电话号码的正则表达式
-        Pattern p = Pattern.compile("^1[3|4|5|8|9][0-9]\\d{8}$");
+        Pattern p = Pattern.compile("^1[3|4|5|8|9]\\d{9}$");
         // 匹配邮箱的正则表达式
         Pattern p1 = Pattern.compile("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$");
         while (true) {
-            System.out.println("请输入姓名:");
+            System.out.println("请输入姓氏:");
             name = in.next();
+            if (!checkLastName(name)) {
+                System.out.println("信息输入错误!请重试");
+                continue;
+            }
+            System.out.println("请输入名字:");
+            firstname = in.next();
+            if (!checkFirstNmae(firstname)) {
+                System.out.println("信息输入错误!请重试");
+                continue;
+            }
             System.out.println("电话/邮箱:(1.电话/2.邮箱)");
             if (in.next().equals("1")) {
                 System.out.println("请输入电话号码:");
                 phoneNumbers = in.next();
-                eMail = " ";
+//                eMail = " ";
+                Matcher matchNumber = p.matcher(getPhoneNumbers());
+                if (!matchNumber.matches()) {
+                    System.out.println("信息输入错误!请重试");
+                    continue;
+                }
             } else {
                 System.out.println("请输入e-mail:");
                 eMail = in.next();
-                phoneNumbers = " ";
+                Matcher matchEmail = p1.matcher(geteMail());
+                if (!matchEmail.matches()) {
+                    System.out.println("信息输入错误!请重试");
+                    continue;
+                }
             }
-            Matcher matchNumber = p.matcher(getPhoneNumbers());
-            Matcher matchEmail = p1.matcher(geteMail());
-            if (matchNumber.matches() || matchEmail.matches()) {
-                break;
-            } else {
-                System.out.println("信息输入错误!请重试");
-            }
+            break;
         }
-        if (phoneNumbers != " ") {
+        if (phoneNumbers != null) {
             memberNumber = getRandomNumber();
+            /**
+             * @！！！！！！！！！！！！！！！！
+             */
             try {
                 Sms.send(memberNumber);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            System.out.println("用户" + phoneNumbers + "您的会员办理成功, 会员号是:" + memberNumber);
+            System.out.println("发送至手机\n" + name + firstname + "用户" + "您的会员办理成功, 会员号是:" + memberNumber);
         } else {
             memberNumber = getRandomNumber();
-            System.out.println("用户" + eMail + "您的会员办理成功, 会员号是:" + memberNumber);
+            SendFileEmail.send(eMail, memberNumber);
+            System.out.println("发送至邮箱\n" +name + firstname + "用户" + "您的会员办理成功, 会员号是:" + memberNumber);
         }
+    }
+
+    public static boolean checkFirstNmae(String name) {
+        Pattern pattern = Pattern.compile("[\\u4e00-\\u9fa5]+");// 验证姓名正则
+        Matcher matcher = pattern.matcher(name);
+        return matcher.matches();
+    }
+
+    public static boolean checkLastName(String name) {
+        String[] surName = {
+                "赵","钱","孙","李","周","吴","郑","王","冯","陈",
+                "楮","卫","蒋","沈","韩","杨","朱","秦","尤","许",
+                "何","吕","施","张","孔","曹","严","华","金","魏",
+                "陶","姜","戚","谢","邹","喻","柏","水","窦","章",
+                "云","苏","潘","葛","奚","范","彭","郎","鲁","韦",
+                "昌","马","苗","凤","花","方","俞","任","袁","柳",
+                "酆","鲍","史","唐","费","廉","岑","薛","雷","贺",
+                "倪","汤","滕","殷","罗","毕","郝","邬","安","常",
+                "乐","于","时","傅","皮","卞","齐","康","伍","余",
+                "元","卜","顾","孟","平","黄","和","穆","萧","尹",
+                "姚","邵","湛","汪","祁","毛","禹","狄","米","贝",
+                "明","臧","计","伏","成","戴","谈","宋","茅","庞",
+                "熊","纪","舒","屈","项","祝","董","梁","杜","阮",
+                "蓝","闽","席","季","麻","强","贾","路","娄","危",
+                "江","童","颜","郭","梅","盛","林","刁","锺","徐",
+                "丘","骆","高","夏","蔡","田","樊","胡","凌","霍",
+                "虞","万","支","柯","昝","管","卢","莫","经","房",
+                "裘","缪","干","解","应","宗","丁","宣","贲","邓",
+                "郁","单","杭","洪","包","诸","左","石","崔","吉",
+                "钮","龚","程","嵇","邢","滑","裴","陆","荣","翁",
+                "荀","羊","於","惠","甄","麹","家","封","芮","羿",
+                "储","靳","汲","邴","糜","松","井","段","富","巫",
+                "乌","焦","巴","弓","牧","隗","山","谷","车","侯",
+                "宓","蓬","全","郗","班","仰","秋","仲","伊","宫",
+                "宁","仇","栾","暴","甘","斜","厉","戎","祖","武",
+                "符","刘","景","詹","束","龙","叶","幸","司","韶",
+                "郜","黎","蓟","薄","印","宿","白","怀","蒲","邰",
+                "从","鄂","索","咸","籍","赖","卓","蔺","屠","蒙",
+                "池","乔","阴","郁","胥","能","苍","双","闻","莘",
+                "党","翟","谭","贡","劳","逄","姬","申","扶","堵",
+                "冉","宰","郦","雍","郤","璩","桑","桂","濮","牛",
+                "寿","通","边","扈","燕","冀","郏","浦","尚","农",
+                "温","别","庄","晏","柴","瞿","阎","充","慕","连",
+                "茹","习","宦","艾","鱼","容","向","古","易","慎",
+                "戈","廖","庾","终","暨","居","衡","步","都","耿",
+                "满","弘","匡","国","文","寇","广","禄","阙","东",
+                "欧","殳","沃","利","蔚","越","夔","隆","师","巩",
+                "厍","聂","晁","勾","敖","融","冷","訾","辛","阚",
+                "那","简","饶","空","曾","毋","沙","乜","养","鞠",
+                "须","丰","巢","关","蒯","相","查","后","荆","红",
+                "游","竺","权","逑","盖","益","桓","公","仉","督",
+                "晋","楚","阎","法","汝","鄢","涂","钦","归","海",
+                "岳","帅","缑","亢","况","后","有","琴","商","牟",
+                "佘","佴","伯","赏","墨","哈","谯","笪","年","爱",
+                "阳","佟"};
+        String[] compoundNmae = {
+                "万俟","司马","上官","欧阳","夏侯",
+                "诸葛","闻人","东方","赫连","皇甫",
+                "尉迟","公羊","澹台","公冶","宗政",
+                "濮阳","淳于","单于","太叔","申屠",
+                "公孙","仲孙","轩辕","令狐","锺离",
+                "宇文","长孙","慕容","鲜于","闾丘",
+                "司徒","司空","丌官","司寇","南宫",
+                "子车","颛孙","端木","巫马","公西",
+                "漆雕","乐正","壤驷","公良","拓拔",
+                "夹谷","宰父","谷梁","段干","百里",
+                "东郭","南门","呼延","羊舌","微生",
+                "梁丘","左丘","东门","西门"};
+        if (name.length() == 1) {
+            for (var i : surName) {
+                if (i.equals(name)) {
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            for (var i : compoundNmae) {
+                if (i.equals(name)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 
     public String getRandomNumber() {
@@ -118,8 +226,11 @@ class Order {
                 while (true) {
                     select = in.next();
                     if (select.equals("Q")) {
-                        System.out.println("请问KFC还是带走(1.KFC/2.带走)");
-                        in.next().equals("1");
+                        System.out.println("请问KFC还是带走(1.KFC/2.带走/需要取消订单按Q)");
+                        if (in.next().equals("Q")) {
+                            System.out.println("订单已取消, 谢谢使用!");
+                            return;
+                        }
                         System.out.println("点餐完毕!" + "需支付:" + prise + "￥");
                         queryMember();
                         payWay();
@@ -278,12 +389,13 @@ class Demo extends JFrame {
         }
         g2.setColor(Color.orange);
         int i = 0;
+        int count = 0;
         LinkedHashMap<String, Integer> p = new LinkedHashMap<String, Integer>();
         p.put("不辣", 0);
         p.put("微辣", 0);
         p.put("中辣", 0);
         for (var it : Meals.kfcPackage.keySet()) {
-            System.out.println(Meals.kfcPackage.get(it).name + " " + Meals.kfcPackage.get(it).choose);
+            System.out.println(Meals.kfcPackage.get(it).name + ": " + Meals.kfcPackage.get(it).choose);
             int value = Meals.kfcPackage.get(it).choose * 12 + 11;
             int step = (i + 1) * 40;//设置每隔柱形图的水平间隔为40
             //绘制矩形
@@ -307,8 +419,9 @@ class Demo extends JFrame {
         }
         g2.setColor(Color.red);
         for (var it : p.keySet()) {
+            count += p.get(it);
             int value = p.get(it) * 12 + 11;
-            System.out.println(it + " " + p.get(it));
+            System.out.println(it + ": " + p.get(it));
             int step = (i + 1) * 40;//设置每隔柱形图的水平间隔为40
             //绘制矩形
             g2.fillRoundRect(leftMargin + step * 2, Height - value, 40, value, 0, 0);
@@ -316,5 +429,6 @@ class Demo extends JFrame {
             g2.drawString(it, leftMargin + step * 2, Height - value - 5);
             i++;
         }
+        System.out.println("总销售量: " + count);
     }
 }
