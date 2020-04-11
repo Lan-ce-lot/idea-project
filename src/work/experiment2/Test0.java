@@ -1,5 +1,8 @@
 package work.experiment2;
 
+import Sql.MySQLDemo;
+import learn.interest.ImageSetTest;
+
 import java.util.LinkedHashMap;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -48,15 +51,12 @@ class Customer {
     private  String firstname;
     private String phoneNumbers;
     private String memberNumber;
-
     public String geteMail() {
         return eMail;
     }
-
     public String getPhoneNumbers() {
         return phoneNumbers;
     }
-
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
         while (true) {
@@ -66,10 +66,8 @@ class Customer {
     }
     public void Membership() {
         Scanner in = new Scanner(System.in);
-        // 匹配电话号码的正则表达式
-        Pattern p = Pattern.compile("^1[3|4|5|8|9]\\d{9}$");
-        // 匹配邮箱的正则表达式
-        Pattern p1 = Pattern.compile("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$");
+        Pattern p = Pattern.compile("^1[3|4|5|8|9]\\d{9}$");// 匹配电话号码的正则表达式
+        Pattern p1 = Pattern.compile("^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$");// 匹配邮箱的正则表达式
         while (true) {
             System.out.println("请输入姓氏:");
             name = in.next();
@@ -87,7 +85,6 @@ class Customer {
             if (in.next().equals("1")) {
                 System.out.println("请输入电话号码:");
                 phoneNumbers = in.next();
-//                eMail = " ";
                 Matcher matchNumber = p.matcher(getPhoneNumbers());
                 if (!matchNumber.matches()) {
                     System.out.println("信息输入错误!请重试");
@@ -106,18 +103,20 @@ class Customer {
         }
         if (phoneNumbers != null) {
             memberNumber = getRandomNumber();
-            /**
-             * @！！！！！！！！！！！！！！！！
-             */
+            //@！！！！！！！！！！！！！！！
             try {
                 Sms.send(memberNumber);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            System.out.println("id:" + memberNumber +" 姓:" + name + " 名:" + firstname + " 电话:" + "未输入" + " 邮箱:" + eMail);
+            MySQLDemo.inster(memberNumber, name, firstname, phoneNumbers, "未输入");
             System.out.println("发送至手机\n" + name + firstname + "用户" + "您的会员办理成功, 会员号是:" + memberNumber);
         } else {
             memberNumber = getRandomNumber();
             SendFileEmail.send(eMail, memberNumber);
+            System.out.println("id:" + memberNumber +" 姓:" + name + " 名:" + firstname + " 电话:" + "未输入" + " 邮箱:" + eMail);
+            MySQLDemo.inster(memberNumber, name, firstname, "未输入", eMail);
             System.out.println("发送至邮箱\n" +name + firstname + "用户" + "您的会员办理成功, 会员号是:" + memberNumber);
         }
     }
@@ -203,7 +202,6 @@ class Customer {
             }
             return false;
         }
-
     }
 
     public String getRandomNumber() {
@@ -214,7 +212,6 @@ class Customer {
 class Order {
     private double prise;
     Scanner in = new Scanner(System.in);
-
     public void selectPackage() {
         System.out.println("请选择套餐(输入数字1,2,3...), Q结束选择");
         while (true) {
@@ -243,47 +240,63 @@ class Order {
                 }
                 break;
             }
-
             if (m.matches()) {
                 System.out.println("您已选择套餐" + select + ", Q结束选择");
                 prise += Meals.kfcPackage.get(select).prise;
                 Meals.kfcPackage.get(select).choose++;
-            } else {
-                System.out.println("输入错误哦...请重试");
-            }
+            } else System.out.println("输入错误哦...请重试");
         }
     }
 
     public boolean queryMember() {
         System.out.println(prise + "请问您是会员吗?(Y/N)");
-
         if (in.next().equals("Y")) {
-            System.out.println("请输入会员号");
-            System.out.println("尊贵的会员" + in.next() + ", 您可享受会员价");
-            return true;
+            while (true) {
+                System.out.println("请输入会员号");
+                String id = in.next();
+                if (MySQLDemo.query(id)) {
+                    System.out.println("尊贵的会员" + id + ", 您可享受会员价");
+                    return true;
+                } else System.out.println("会员号输入错误!请重试");
+            }
         } else {
             System.out.println("需要办理会员吗?(Y/N)");
             if (in.next().equals("Y")) {
                 Customer customer = new Customer();
                 customer.Membership();
                 return true;
-            } else {
-                return false;
-            }
+            } else return false;
         }
     }
 
     public void payWay() {
         System.out.println("需支付:" + prise + "￥");
-        System.out.println("请选择支付方式(1.现金 2.会员价 3.积分)");
+        System.out.println("请选择支付方式(1.原价 2.会员价 3.积分)");
         String temp = in.next();
         if (temp.equals("1")) {
-            System.out.println("共" + prise + "￥, 支付成功!");
+            System.out.println("(1.现金 2.扫码)");
+            temp = in.next();
+            if (temp.equals("2")) {
+                System.out.println("(1.支付宝 2.微信)");
+                if (in.next().equals("1")) {
+                    ImageSetTest N = new ImageSetTest("1");
+                } else {
+                    ImageSetTest N = new ImageSetTest();
+                }
+            } System.out.println("共" + prise + "￥, 支付成功!");
         } else if (temp.equals("2")) {
+            System.out.println("(1.现金 2.扫码)");
+            temp = in.next();
+            if (temp.equals("2")) {
+                System.out.println("(1.支付宝 2.微信)");
+                if (in.next().equals("1")) {
+                    ImageSetTest N = new ImageSetTest("1");
+                } else {
+                    ImageSetTest N = new ImageSetTest();
+                }
+            }
             System.out.printf("共%.2f￥, 支付成功!(会员享8折优惠)\n", (prise * 0.8));
-        } else {
-            System.out.println("积分支付成功!");
-        }
+        } else System.out.println("积分支付成功!");
     }
 }
 

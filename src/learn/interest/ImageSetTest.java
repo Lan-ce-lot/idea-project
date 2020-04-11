@@ -29,7 +29,7 @@ public class ImageSetTest extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     public ImageSetTest(String s) {
-        this.setSize(405, 620);
+        this.setSize(465, 620);
         this.setLayout(null);
         try {
                 icon = new ImageIcon(new URL("http://39.107.228.31/wp-content/uploads/2020/04/zfb.jpg"));
