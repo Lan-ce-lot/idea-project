@@ -2,6 +2,11 @@ package work4_13;
 
 public class Test {
     public static void main(String[] args) {
+
+//        double[] a[];
+        double a[][] = new double[3][3];
+
+
         Person p = new Person("张三", "江西", "19914665732", "1617025845@qq.com");
         Student student = new Student("李四", "江西", "19914665732", "1617025845@qq.com", "大一");
         Employee e = new Employee("王五", "江西", "19914665732", "1617025845@qq.com", "办公室", 1000.0, "2020-4-13");
@@ -36,10 +41,6 @@ class Person {
 }
 
 class Student extends Person {
-    final String class1 = "大一";
-    final String class2 = "大二";
-    final String class3 = "大三";
-    final String class4 = "大四";
     String classStatus;
 
     public Student() {}
