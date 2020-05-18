@@ -1,18 +1,24 @@
 package work.experiment4;
 
-/**
- * A program for viewing images.
- *
- * @author Lance
- * @version 1.00 2020-03-08
- */
-
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.io.File;
 import java.io.PrintWriter;
 
 public class Test2 {
+    //    public static void main(String[] args) throws Exception {
+//        String s = "F:\\srcRootDirectory";
+//        Test2.test(s);
+//    }
+//
+//    public static void test(String args) throws Exception {
+//        File initialFile = new File(args);
+//        if (!initialFile.exists()) {
+//            System.out.println(args + " is not exist");
+//            System.exit(2);
+//        }
+//        addPackage(initialFile);
+//    }
     public static void main(String[] args) throws Exception {
         if (args.length != 1) {
             System.out.println("Useage srcRootDirectory");
@@ -24,10 +30,6 @@ public class Test2 {
             System.out.println(args[0] + " is not exist");
             System.exit(2);
         }
-//      System.out.println(initialFile.isFile());
-//      System.out.println(initialFile.isDirectory());
-//      System.out.println(initialFile.getParent());
-//     用流来读取的时候只能读取文件，不能读取文件夹
         addPackage(initialFile);
     }
 
@@ -36,9 +38,7 @@ public class Test2 {
             add(initialFile);
         } else if (initialFile.isDirectory()) {
             File[] fileList = initialFile.listFiles();
-            for (File file : fileList) {
-                addPackage(file);
-            }
+            for (File file : fileList) addPackage(file);
         }
     }
 
@@ -49,13 +49,14 @@ public class Test2 {
             fileContent.add(new String(input.nextLine()));
         }
 
-        try (
-                PrintWriter output = new PrintWriter(file);
-        ) {
-            output.println("//" + file.getParent());
-            for (String content : fileContent) {
-                output.println(content);
-            }
+        try (PrintWriter output = new PrintWriter(file);) {
+            String s = file.getParent();
+            s = s.substring(s.lastIndexOf('\\') + 1);
+            s = s.replace('\\', '.');
+
+            System.out.println(s);
+            output.println("package " + s + ";");
+            for (String content : fileContent) output.println(content);
         }
     }
 }
