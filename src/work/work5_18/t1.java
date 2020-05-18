@@ -1,5 +1,7 @@
 package work.work5_18;
 
+import java.util.logging.Logger;
+
 /**
  * A program for viewing images.
  *
@@ -20,9 +22,13 @@ package work.work5_18;
 public abstract class t1 {
 
         public static void main(String[] args) {
+
             Number[] numberArray = new Integer[2];
+
+            System.out.println(numberArray.equals(numberArray));
             System.out.println(Test.getType(numberArray));
-            numberArray[0]=new Double(1.5);
+//            numberArray[0]=new Double(1.5);
+
     }
 }
 

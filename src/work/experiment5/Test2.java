@@ -6,6 +6,7 @@ import java.util.GregorianCalendar;
 public class Test2 {
     public static void main(String[] args) {
         // 得到当前时间
+
         Calendar ca = Calendar.getInstance();
 //        ca.set(2020, 10, 18);
         System.out.println("今天是: " +
