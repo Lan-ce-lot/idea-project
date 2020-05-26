@@ -2,6 +2,7 @@ package learn.L5_8;
 
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -12,6 +13,7 @@ import java.util.Objects;
  */
 public class EqualsTest {
     public static void main(String[] args) {
+        ArrayList<Integer> a = new ArrayList<Integer>();
         var alice1 = new Employee("A", 75000, LocalDate.of(1987, 12, 15));
         var alice2 = alice1;
         var alice3 = new Employee("A", 75000, LocalDate.of(1987, 12, 15));
